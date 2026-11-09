@@ -1,0 +1,27 @@
+{
+  "slug": "dummy",
+  "version": "1.0.0",
+  "title": { "en": "Dummy Test Game" },
+  "description": { "en": "Internal fixture used to validate the G0 scaffolding." },
+  "category": "arcade",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": [],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 100,
+    "min_play_seconds": 0,
+    "max_score_per_second": 100
+  },
+  "xp": { "rate": 0, "max_per_run": 0 },
+  "license": {
+    "code": "n/a",
+    "assets": "n/a",
+    "author": "AlphaGo project",
+    "source_url": "https://example.com/not-shipped"
+  },
+  "size_kb": 1,
+  "status": "pending"
+}

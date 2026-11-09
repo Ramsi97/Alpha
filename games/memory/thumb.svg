@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" fill="#0a0a0a"/>
+  <rect x="10" y="10" width="50" height="50" rx="6" fill="#e74c3c"/>
+  <rect x="68" y="10" width="50" height="50" rx="6" fill="#2a2a2a" stroke="#444"/>
+  <rect x="10" y="68" width="50" height="50" rx="6" fill="#2a2a2a" stroke="#444"/>
+  <rect x="68" y="68" width="50" height="50" rx="6" fill="#3498db"/>
+  <text x="35" y="44" font-size="26" text-anchor="middle">🍎</text>
+  <text x="93" y="102" font-size="26" text-anchor="middle">🍇</text>
+</svg>

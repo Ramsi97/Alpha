@@ -1,0 +1,4 @@
+This "dummy" game is original test fixture code written for the AlphaGo
+project itself (not imported from a third party). It is not part of the
+shipped game catalog and exists only to validate the Phase G0 scaffolding
+(bridge, manifest validator, test host).

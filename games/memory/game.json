@@ -1,0 +1,27 @@
+{
+  "slug": "memory",
+  "version": "1.0.0",
+  "title": { "en": "Memory Match" },
+  "description": { "en": "Flip pairs of cards, remember positions, clear the board." },
+  "category": "memory",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": ["4x4", "6x6", "8x8"],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 3000,
+    "min_play_seconds": 10,
+    "max_score_per_second": 60
+  },
+  "xp": { "rate": 0.04, "max_per_run": 120 },
+  "license": {
+    "code": "MIT",
+    "assets": "none (emoji glyphs only, no external assets)",
+    "author": "Tejas Wavde",
+    "source_url": "https://github.com/wavde/games"
+  },
+  "size_kb": 65,
+  "status": "pending"
+}

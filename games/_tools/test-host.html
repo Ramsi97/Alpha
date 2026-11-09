@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>AlphaGo test host</title>
+<style>
+  :root { font-family: system-ui, sans-serif; }
+  body { margin: 0; display: flex; height: 100vh; }
+  #sidebar { width: 220px; overflow-y: auto; border-right: 1px solid #ccc; padding: 8px; }
+  #sidebar button { display: block; width: 100%; text-align: left; margin-bottom: 4px; padding: 6px; }
+  #sidebar button.active { background: #2481cc; color: #fff; }
+  #stage { flex: 1; display: flex; flex-direction: column; }
+  #controls { padding: 8px; border-bottom: 1px solid #ccc; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #frame-wrap { flex: 1; display: flex; justify-content: center; background: #222; position: relative; }
+  iframe { width: 390px; height: 100%; border: none; background: #fff; }
+  #log { height: 220px; overflow-y: auto; border-top: 1px solid #ccc; font-family: monospace; font-size: 12px; padding: 4px; background: #111; color: #ddd; }
+  .log-line { white-space: pre-wrap; border-bottom: 1px solid #333; padding: 2px 0; }
+  .log-line.flag { color: #ff6b6b; font-weight: bold; }
+  .log-line.game-to-host { color: #6bcB77; }
+  .log-line.host-to-game { color: #74b9ff; }
+</style>
+</head>
+<body>
+  <div id="sidebar">
+    <h3 style="font-size:14px;">Games</h3>
+    <div id="game-list">loading...</div>
+  </div>
+  <div id="stage">
+    <div id="controls">
+      <button id="btn-start">Send start</button>
+      <button id="btn-pause">pause</button>
+      <button id="btn-resume">resume</button>
+      <button id="btn-theme-light">theme: light</button>
+      <button id="btn-theme-dark">theme: dark</button>
+      <label>seed <input id="seed" value="1234" size="6" /></label>
+      <label>variant <input id="variant" value="" size="8" /></label>
+      <label>lang <input id="lang" value="en" size="4" /></label>
+    </div>
+    <div id="frame-wrap">
+      <iframe id="game-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+    <div id="log"></div>
+  </div>
+
+<script>
+// Maintain this list as games are added under games/<slug>/.
+// (Local static serving has no directory listing, so the test host needs an index.)
+const GAME_SLUGS = ["dummy", "2048", "minesweeper", "memory", "lights-out", "mini-sudoku", "connect-four", "0hh1", "snake", "wordle", "breakout"];
+
+const listEl = document.getElementById("game-list");
+const frame = document.getElementById("game-frame");
+const logEl = document.getElementById("log");
+
+let current = null;       // { slug, manifest }
+let readyAt = null;
+let readyTimer = null;
+let gameOverCount = 0;
+let lastMessageTime = 0;
+
+function log(direction, text, flag) {
+  const div = document.createElement("div");
+  div.className = "log-line " + direction + (flag ? " flag" : "");
+  const ts = new Date().toISOString().slice(11, 23);
+  div.textContent = `[${ts}] ${direction === "game-to-host" ? "GAME→HOST" : direction === "host-to-game" ? "HOST→GAME" : "FLAG"}  ${text}`;
+  logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+function flag(text) {
+  log("flag", text, true);
+}
+
+async function loadGames() {
+  listEl.innerHTML = "";
+  for (const slug of GAME_SLUGS) {
+    try {
+      const res = await fetch(`../${slug}/game.json`);
+      const manifest = await res.json();
+      const btn = document.createElement("button");
+      btn.textContent = manifest.title?.en || slug;
+      btn.onclick = () => selectGame(slug, manifest, btn);
+      listEl.appendChild(btn);
+    } catch (e) {
+      const div = document.createElement("div");
+      div.textContent = `${slug}: failed to load game.json (${e.message})`;
+      listEl.appendChild(div);
+    }
+  }
+}
+
+function selectGame(slug, manifest, btn) {
+  document.querySelectorAll("#game-list button").forEach((b) => b.classList.remove("active"));
+  btn.classList.add("active");
+  current = { slug, manifest };
+  readyAt = null;
+  gameOverCount = 0;
+  clearTimeout(readyTimer);
+  frame.src = `../${slug}/${manifest.entry}`;
+  log("flag", `loading ${slug}...`);
+  readyTimer = setTimeout(() => {
+    if (!readyAt) flag(`${slug}: no "ready" received within 5 seconds`);
+  }, 5000);
+}
+
+function sendToGame(msg) {
+  if (!frame.contentWindow) return;
+  log("host-to-game", JSON.stringify(msg));
+  frame.contentWindow.postMessage({ source: "alphago-host", ...msg }, "*");
+}
+
+window.addEventListener("message", (e) => {
+  const d = e.data || {};
+  if (d.source !== "alphago-game") return;
+  if (e.source !== frame.contentWindow) {
+    flag(`message claimed source alphago-game but did not come from the active iframe`);
+    return;
+  }
+  log("game-to-host", JSON.stringify(d));
+  lastMessageTime = Date.now();
+
+  if (d.type === "ready") {
+    readyAt = Date.now();
+  } else if (d.type === "gameover") {
+    gameOverCount++;
+    if (gameOverCount > 1) flag(`"gameover" sent more than once for this run (count=${gameOverCount})`);
+    if (current?.manifest?.score && typeof d.score === "number" && d.score > current.manifest.score.max_score) {
+      flag(`score ${d.score} exceeds manifest max_score ${current.manifest.score.max_score}`);
+    }
+  } else if (d.type === "score") {
+    if (current?.manifest?.score && typeof d.value === "number" && d.value > current.manifest.score.max_score) {
+      flag(`live score ${d.value} exceeds manifest max_score ${current.manifest.score.max_score}`);
+    }
+  } else if (d.type === "error") {
+    flag(`game reported error: ${d.message}`);
+  } else {
+    flag(`unknown message type "${d.type}"`);
+  }
+});
+
+document.getElementById("btn-start").onclick = () => {
+  gameOverCount = 0;
+  sendToGame({
+    type: "start",
+    variant: document.getElementById("variant").value || undefined,
+    seed: document.getElementById("seed").value || undefined,
+    lang: document.getElementById("lang").value || "en",
+    theme: {},
+  });
+};
+document.getElementById("btn-pause").onclick = () => sendToGame({ type: "pause" });
+document.getElementById("btn-resume").onclick = () => sendToGame({ type: "resume" });
+document.getElementById("btn-theme-light").onclick = () =>
+  sendToGame({ type: "theme", params: { bg_color: "#ffffff", text_color: "#000000", button_color: "#2481cc", button_text_color: "#ffffff", hint_color: "#999999", link_color: "#2481cc" } });
+document.getElementById("btn-theme-dark").onclick = () =>
+  sendToGame({ type: "theme", params: { bg_color: "#17212b", text_color: "#f5f5f5", button_color: "#5288c1", button_text_color: "#ffffff", hint_color: "#708499", link_color: "#6ab7ff" } });
+
+loadGames();
+</script>
+</body>
+</html>

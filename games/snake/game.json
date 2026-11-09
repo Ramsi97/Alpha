@@ -1,0 +1,27 @@
+{
+  "slug": "snake",
+  "version": "1.0.0",
+  "title": { "en": "Snake" },
+  "description": { "en": "Eat food, grow longer, don't hit the wall or yourself." },
+  "category": "arcade",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": [],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 5000,
+    "min_play_seconds": 15,
+    "max_score_per_second": 40
+  },
+  "xp": { "rate": 0.03, "max_per_run": 150 },
+  "license": {
+    "code": "MIT",
+    "assets": "none (canvas-drawn shapes only, no external assets)",
+    "author": "AlphaGo project",
+    "source_url": "n/a (original implementation, not imported)"
+  },
+  "size_kb": 11,
+  "status": "pending"
+}

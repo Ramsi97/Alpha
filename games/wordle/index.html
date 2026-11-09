@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Word Guess</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <link rel="stylesheet" href="../_shared/theme.css" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding-top: 14px;
+      position: relative;
+    }
+    #message {
+      min-height: 20px;
+      font-size: 14px;
+      color: var(--ag-text);
+      text-align: center;
+    }
+    #board {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 6px;
+      width: min(80vw, 300px);
+      aspect-ratio: 5 / 6;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .tile {
+      border: 2px solid var(--ag-hint);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 6vw, 1.6rem);
+      color: var(--ag-text);
+      text-transform: uppercase;
+      user-select: none;
+    }
+    .tile.filled { border-color: var(--ag-text); }
+    .tile.correct { background: #4caf50; border-color: #4caf50; color: #fff; }
+    .tile.present { background: #d4a017; border-color: #d4a017; color: #fff; }
+    .tile.absent { background: var(--ag-secondary-bg); border-color: var(--ag-hint); color: var(--ag-hint); }
+
+    #keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: min(94vw, 420px);
+    }
+    .krow { display: flex; gap: 5px; justify-content: center; }
+    .key {
+      flex: 1;
+      min-height: 44px;
+      max-width: 40px;
+      border: none;
+      border-radius: 4px;
+      background: var(--ag-secondary-bg);
+      color: var(--ag-text);
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      touch-action: manipulation;
+    }
+    .key.wide { max-width: 60px; font-size: 11px; }
+    .key.correct { background: #4caf50; color: #fff; }
+    .key.present { background: #d4a017; color: #fff; }
+    .key.absent { background: #3a3a3a; color: #888; }
+
+    .alphago-waiting {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      background: var(--ag-bg);
+      color: var(--ag-text);
+      font-size: 16px;
+    }
+    .alphago-waiting.hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="alphago-waiting">Waiting for today's word…</div>
+  <p id="message"></p>
+  <div id="board"></div>
+  <div id="keyboard"></div>
+
+  <script src="../_shared/alphago-bridge.js"></script>
+  <script src="words.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

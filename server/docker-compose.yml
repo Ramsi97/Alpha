@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: alphago
+      POSTGRES_USER: alphago
+      POSTGRES_PASSWORD: alphago
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://alphago:alphago@postgres:5432/alphago
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    command: >
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4"
+    # --workers 4: the B6 load test (server/README.md) found a single
+    # worker process can't hit the plan's own stated peak estimate
+    # (section 20: 50-100 req/s) no matter how wide the DB pool is —
+    # median latency was fine at ~50 concurrent users and ~10x worse at
+    # 150. Not a "scale out later" concern; needed from the first real
+    # deploy.
+
+  # worker: not built yet (plan Phase B3 — background jobs: notifications,
+  # task verification, season/tournament finalization). Add here once it
+  # exists; same image, different command (e.g. `arq app.workers.jobs.WorkerSettings`).
+
+volumes:
+  pgdata:

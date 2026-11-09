@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>minesweeper</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Minesweeper — reveal safe cells, flag the mines.">
+<link rel="stylesheet" href="../_shared/theme.css">
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="manpage.css">
+<link rel="stylesheet" href="soft.css">
+<style>
+  .ms {
+    display: grid;
+    gap: 2px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 4px;
+    border-radius: var(--r-md);
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;
+    touch-action: manipulation;
+  }
+  .c {
+    width: 28px;
+    height: 28px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+    font-family: var(--font-mono);
+    color: var(--fg);
+    transition: background 0.08s, border-color 0.08s;
+  }
+  @media (max-width: 560px) {
+    .c { width: 24px; height: 24px; font-size: 0.75rem; }
+  }
+  @media (max-width: 420px) {
+    .c { width: 20px; height: 20px; font-size: 0.65rem; border-radius: 3px; }
+  }
+  .c:hover { background: var(--panel); border-color: var(--border-hi); }
+  .c.open {
+    background: var(--bg);
+    border-color: var(--border);
+    cursor: default;
+  }
+  .c.open:hover { background: var(--bg); }
+  .c.flag { background: rgba(245, 197, 66, 0.12); color: var(--accent); border-color: rgba(245, 197, 66, 0.4); }
+  .c.mine { background: rgba(255, 107, 107, 0.18); color: var(--danger); border-color: var(--danger); }
+  /* Amber-scale number colors */
+  .n1 { color: #8ec9ff; }
+  .n2 { color: var(--accent-2); }
+  .n3 { color: var(--warn); }
+  .n4 { color: var(--accent); }
+  .n5 { color: #e08aff; }
+  .n6 { color: #5fe0d2; }
+  .n7 { color: var(--fg); }
+  .n8 { color: var(--danger); }
+
+  select {
+    background: var(--panel-2);
+    color: var(--fg);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-md);
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    min-height: var(--tap);
+  }
+  .alphago-waiting {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    background: var(--ag-bg);
+    color: var(--ag-text);
+    font-size: 16px;
+  }
+  .alphago-waiting.hidden { display: none; }
+  .wrap { position: relative; }
+</style>
+</head>
+<body class="g-minesweeper">
+<main class="wrap">
+  <div class="alphago-waiting">Waiting for the game to start…</div>
+  <div class="topbar">
+    <h1>minesweeper</h1>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <p class="status" id="status">Tap to reveal. Long-press (or right-click) to flag.</p>
+      <button class="btn ghost tool-btn man-trigger" data-man="minesweeper" data-man-title="MINESWEEPER(1)" type="button">
+        <span class="q">?</span> man
+      </button>
+    </div>
+    <div id="board" class="ms"></div>
+    <div class="controls" style="justify-content:center">
+      <button class="primary" id="reset">New game</button>
+      <select id="diff" aria-label="Difficulty">
+        <option value="easy">Easy · 9×9 · 10 mines</option>
+        <option value="medium" selected>Medium · 16×16 · 40</option>
+        <option value="hard">Hard · 20×20 · 80</option>
+      </select>
+      <span id="mines" class="kbd">0 mines</span>
+      <span id="time" class="kbd">0s</span>
+    </div>
+  </div>
+</main>
+
+<template id="man-minesweeper">
+  <h2>Name</h2>
+  <p>minesweeper — clear the board without setting off a mine.</p>
+
+  <h2>Rules</h2>
+  <ul>
+    <li>Each cell is either empty or contains a hidden mine.</li>
+    <li>Revealing a numbered cell tells you how many mines touch it (8 neighbors).</li>
+    <li>Revealing a blank (zero) cell auto-opens its neighbors in a flood.</li>
+    <li>Reveal <strong>every</strong> non-mine cell to win. Reveal a mine to lose.</li>
+    <li>Your first click is always safe.</li>
+  </ul>
+
+  <h2>Controls</h2>
+  <ul>
+    <li><strong>Tap / left-click</strong> a cell to reveal it.</li>
+    <li><strong>Long-press (500ms)</strong> or <strong>right-click</strong> to place / remove a flag.</li>
+    <li><code>New game</code> re-deals. Difficulty dropdown changes board size and mine count.</li>
+  </ul>
+
+  <h2>Strategy</h2>
+  <p class="muted">If a number equals the count of flagged neighbors, all remaining neighbors are safe. If a number equals the count of unknown neighbors, they're all mines.</p>
+</template>
+
+<script src="../_shared/alphago-bridge.js"></script>
+<script src="game.js"></script>
+<script defer src="manpage.js"></script>
+</body>
+</html>

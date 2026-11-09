@@ -1,0 +1,27 @@
+{
+  "slug": "2048",
+  "version": "1.0.0",
+  "title": { "en": "2048" },
+  "description": { "en": "Join the numbers and get to the 2048 tile!" },
+  "category": "number-puzzle",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": [],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 500000,
+    "min_play_seconds": 20,
+    "max_score_per_second": 1000
+  },
+  "xp": { "rate": 0.01, "max_per_run": 300 },
+  "license": {
+    "code": "MIT",
+    "assets": "Apache-2.0 (Clear Sans font, Intel) — pending verification, see CREDITS.md",
+    "author": "Gabriele Cirulli",
+    "source_url": "https://github.com/gabrielecirulli/2048"
+  },
+  "size_kb": 136,
+  "status": "pending"
+}

@@ -1,0 +1,827 @@
+/* ============================================================
+   soft.css — warm dark game surfaces
+   ------------------------------------------------------------
+   Loaded AFTER shared.css on each game page.  Hub (index.html)
+   does NOT include this file and stays retro-terminal.
+
+   Strategy: override every shared CSS custom property on
+   body[class*="g-"] so that inline <style> blocks in each
+   game HTML auto-inherit warm dark values.  Per-game sections
+   layer colour personality on top.
+   ============================================================ */
+
+/* ── Design tokens ──────────────────────────────────────────── */
+:root {
+  /* Rich region palette (queens, accents) */
+  --q-rose:    #b5706e;
+  --q-peach:   #c49464;
+  --q-gold:    #b3a458;
+  --q-sage:    #6a9e5e;
+  --q-mint:    #5a9e88;
+  --q-sky:     #5c84ab;
+  --q-lilac:   #8a72a8;
+  --q-blush:   #a8687e;
+  --q-clay:    #a88a58;
+
+  /* Semantic game colours */
+  --sun:    #f5b800;
+  --moon:   #8b9cf7;
+  --coral:  #ff6b6b;
+  --teal:   #4dd9ac;
+  --grape:  #a78bfa;
+  --forest: #6dd58c;
+}
+
+/* ── Game-page dark variable overrides ──────────────────────── */
+body[class*="g-"] {
+  --bg:        #1a1715;
+  --bg-2:      #222019;
+  --panel:     #282520;
+  --panel-2:   #1a1715;
+  --fg:        #ede8e1;
+  --muted:     #9a938a;
+  --dim:       #6a6460;
+  --border:    #363028;
+  --border-hi: #4a4438;
+  --accent:    #f5b800;
+  --accent-2:  #4dd9ac;
+  --danger:    #ff6b6b;
+  --warn:      #f5b800;
+
+  --r-sm: 10px;
+  --r-md: 14px;
+
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Kill CRT scanlines on game pages */
+body[class*="g-"]::before { display: none !important; }
+
+/* ── Topbar ─────────────────────────────────────────────────── */
+body[class*="g-"] .topbar {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 18px;
+}
+body[class*="g-"] .topbar h1 {
+  color: var(--fg);
+  font-weight: 700;
+}
+body[class*="g-"] .topbar h1::before { content: none; }
+body[class*="g-"] .topbar .back {
+  color: var(--muted);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background .15s, color .15s;
+}
+body[class*="g-"] .topbar .back:hover {
+  color: var(--fg);
+  background: rgba(255,255,255,0.06);
+}
+
+/* ── Panel card ─────────────────────────────────────────────── */
+body[class*="g-"] .panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 20px 24px;
+  color: var(--fg);
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.2),
+    0 8px 28px rgba(0,0,0,0.25);
+}
+body[class*="g-"] .panel .row { gap: 10px; }
+body[class*="g-"] .panel .status { color: var(--muted); }
+body[class*="g-"] .panel .status strong,
+body[class*="g-"] .panel .status b { color: var(--fg); }
+body[class*="g-"] .panel .status .ok  { color: var(--forest); }
+body[class*="g-"] .panel .status .hot { color: var(--sun); }
+body[class*="g-"] .panel .status .bad { color: var(--coral); }
+body[class*="g-"] .footer-note { color: var(--muted); }
+
+/* ── Buttons ────────────────────────────────────────────────── */
+body[class*="g-"] .panel button,
+body[class*="g-"] .panel .btn {
+  background: var(--bg-2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: background .15s, border-color .15s, color .15s,
+              transform .08s, box-shadow .15s;
+  min-height: 40px;
+}
+body[class*="g-"] .panel button:hover,
+body[class*="g-"] .panel .btn:hover {
+  background: var(--border);
+  border-color: var(--border-hi);
+}
+body[class*="g-"] .panel button:active,
+body[class*="g-"] .panel .btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+body[class*="g-"] .panel button.primary,
+body[class*="g-"] .panel .btn.primary {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+body[class*="g-"] .panel button.primary:hover,
+body[class*="g-"] .panel .btn.primary:hover {
+  background: #fff;
+  border-color: #fff;
+}
+body[class*="g-"] .panel button.ghost,
+body[class*="g-"] .panel .btn.ghost {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+body[class*="g-"] .panel button.ghost:hover {
+  color: var(--fg);
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border-hi);
+}
+body[class*="g-"] .panel .tool-btn .glyph { color: var(--dim); }
+body[class*="g-"] .panel .tool-btn:hover .glyph { color: var(--fg); }
+
+/* ── Chips ──────────────────────────────────────────────────── */
+body[class*="g-"] .panel .chip {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+  border-radius: 10px;
+  transition: background .15s, border-color .15s, color .15s,
+              transform .08s, box-shadow .15s;
+  min-height: 40px;
+}
+body[class*="g-"] .panel .chip:hover {
+  color: var(--fg);
+  border-color: var(--border-hi);
+}
+body[class*="g-"] .panel .chip:active {
+  transform: translateY(1px) scale(0.98);
+}
+body[class*="g-"] .panel .chip[aria-selected="true"],
+body[class*="g-"] .panel .chip.active {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+  box-shadow: 0 2px 8px rgba(237,232,225,0.15);
+}
+
+/* ── Misc widgets ───────────────────────────────────────────── */
+body[class*="g-"] .panel .kbd {
+  background: var(--bg-2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+body[class*="g-"] .panel select {
+  background: var(--bg-2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+body[class*="g-"] .panel :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Interactive cell press feedback ─────────────────────────── */
+body[class*="g-"] .panel .lo-cell:active,
+body[class*="g-"] .panel .qn-cell:active,
+body[class*="g-"] .panel .tg-cell:active,
+body[class*="g-"] .panel .mem .card:active,
+body[class*="g-"] .panel .cell:active {
+  transform: scale(0.94);
+  transition: transform 0.06s ease-out;
+}
+
+/* ================================================================
+   PER-GAME THEMES
+   ================================================================ */
+
+/* ── Tic-Tac-Toe ────────────────────────────────────────────── */
+body.g-tic-tac-toe .panel .board {
+  background: var(--bg);
+  border: none;
+  border-radius: 16px;
+  padding: 10px;
+  gap: 10px;
+}
+body.g-tic-tac-toe .panel .cell {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--fg);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+body.g-tic-tac-toe .panel .cell:hover:not(:disabled):not(.taken) {
+  background: var(--border);
+  border-color: var(--border-hi);
+}
+body.g-tic-tac-toe .panel .cell.x { color: var(--coral); }
+body.g-tic-tac-toe .panel .cell.o { color: var(--teal); }
+body.g-tic-tac-toe .panel .cell.win {
+  background: rgba(109,213,140,0.15);
+  border-color: rgba(109,213,140,0.4);
+}
+
+/* ── Tango ──────────────────────────────────────────────────── */
+body.g-tango .panel .tg-grid {
+  background: var(--bg);
+  border: none;
+  border-radius: 16px;
+  padding: 10px;
+  gap: 8px;
+}
+body.g-tango .panel .tg-cell {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--dim);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+body.g-tango .panel .tg-cell.given {
+  border-color: var(--border-hi);
+}
+/* ☀ Sun — warm golden glow */
+body.g-tango .panel .tg-cell.sun {
+  color: var(--sun);
+  text-shadow: 0 0 12px rgba(245,184,0,0.45);
+  background: rgba(245,184,0,0.08);
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+}
+body.g-tango .panel .tg-cell.given.sun {
+  background: rgba(245,184,0,0.14);
+}
+/* ☾ Moon — cool indigo glow */
+body.g-tango .panel .tg-cell.moon {
+  color: var(--moon);
+  text-shadow: 0 0 12px rgba(139,156,247,0.45);
+  background: rgba(139,156,247,0.08);
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+}
+body.g-tango .panel .tg-cell.given.moon {
+  background: rgba(139,156,247,0.14);
+}
+body.g-tango .panel .tg-cell.error {
+  border-color: var(--coral);
+  box-shadow: inset 0 0 0 2px rgba(255,107,107,0.3);
+}
+/* Edge constraint badges */
+body.g-tango .panel .tg-edge {
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  font-weight: 700;
+}
+body.g-tango .panel .tg-edge.eq {
+  color: var(--teal);
+  border-color: var(--teal);
+  background: rgba(77,217,172,0.12);
+}
+body.g-tango .panel .tg-edge.neq {
+  color: var(--sun);
+  border-color: var(--sun);
+  background: rgba(245,184,0,0.10);
+}
+
+/* ── Queens ─────────────────────────────────────────────────── */
+body.g-queens .panel .qn-grid {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg);
+  gap: 3px;
+  padding: 3px;
+}
+body.g-queens .panel .qn-cell {
+  color: var(--fg);
+  border: none;
+  border-radius: 10px;
+}
+/* Rich region colours — vibrant on dark, each cell lightly saturated */
+body.g-queens .panel .qn-cell.r0 { background: var(--q-rose); }
+body.g-queens .panel .qn-cell.r1 { background: var(--q-peach); }
+body.g-queens .panel .qn-cell.r2 { background: var(--q-gold); }
+body.g-queens .panel .qn-cell.r3 { background: var(--q-sage); }
+body.g-queens .panel .qn-cell.r4 { background: var(--q-mint); }
+body.g-queens .panel .qn-cell.r5 { background: var(--q-sky); }
+body.g-queens .panel .qn-cell.r6 { background: var(--q-lilac); }
+body.g-queens .panel .qn-cell.r7 { background: var(--q-blush); }
+body.g-queens .panel .qn-cell.r8 { background: var(--q-clay); }
+body.g-queens .panel .qn-cell .mk { color: rgba(0,0,0,0.4); font-weight: 700; }
+body.g-queens .panel .qn-cell .qq {
+  color: #1a1210;
+  filter: drop-shadow(0 1px 1px rgba(255,255,255,0.35));
+}
+body.g-queens .panel .qn-cell.err .qq { color: #fff; filter: drop-shadow(0 0 4px rgba(255,60,60,0.8)); }
+/* Region boundaries — subtle dark lines between coloured zones */
+body.g-queens .panel .qn-cell.br-t { border-top:    2.5px solid rgba(0,0,0,0.3); }
+body.g-queens .panel .qn-cell.br-b { border-bottom: 2.5px solid rgba(0,0,0,0.3); }
+body.g-queens .panel .qn-cell.br-l { border-left:   2.5px solid rgba(0,0,0,0.3); }
+body.g-queens .panel .qn-cell.br-r { border-right:  2.5px solid rgba(0,0,0,0.3); }
+
+/* ── Zip ────────────────────────────────────────────────────── */
+body.g-zip .panel .zp-grid {
+  background: var(--bg);
+  border: none;
+  border-radius: 16px;
+  padding: 4px;
+}
+body.g-zip .panel .zp-cell {
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+body.g-zip .panel .zp-cell.on {
+  background: rgba(245,184,0,0.1);
+}
+body.g-zip .panel .zp-cell .wp {
+  background: var(--grape);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(167,139,250,0.35);
+}
+body.g-zip .panel .zp-cell.start .wp {
+  background: var(--forest);
+  box-shadow: 0 2px 6px rgba(109,213,140,0.35);
+}
+body.g-zip .panel .zp-cell.end .wp {
+  background: var(--coral);
+  box-shadow: 0 2px 6px rgba(255,107,107,0.35);
+}
+body.g-zip .panel .zp-wall-h,
+body.g-zip .panel .zp-wall-v { background: var(--fg); }
+
+/* ── Patches ────────────────────────────────────────────────── */
+body.g-patches .panel .pt-grid {
+  background: var(--bg);
+  border: none;
+  border-radius: 16px;
+  padding: 4px;
+}
+body.g-patches .panel .pt-cell {
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+body.g-patches .panel .pt-cell.clue {
+  color: var(--fg);
+  font-weight: 800;
+  background: rgba(255,255,255,0.06);
+}
+body.g-patches .panel .pt-cell.drag {
+  background: rgba(255,255,255,0.1);
+}
+body.g-patches .panel .pt-rect-overlay {
+  border-radius: 6px;
+}
+body.g-patches .panel .pt-rect-overlay.bad {
+  border-color: var(--coral);
+  background: rgba(255,107,107,0.12);
+}
+
+/* ── Mini-Sudoku ────────────────────────────────────────────── */
+body.g-mini-sudoku .panel .sk-grid {
+  background: var(--bg);
+  border: 2px solid var(--border-hi);
+  border-radius: 14px;
+  overflow: hidden;
+}
+body.g-mini-sudoku .panel .sk-cell {
+  background: var(--bg-2);
+  border-color: var(--border);
+  color: var(--teal);
+  font-weight: 600;
+}
+body.g-mini-sudoku .panel .sk-cell.given {
+  background: rgba(255,255,255,0.06);
+  color: var(--fg);
+  font-weight: 800;
+}
+body.g-mini-sudoku .panel .sk-cell.sel {
+  background: rgba(90,158,232,0.18);
+  box-shadow: inset 0 0 0 2px rgba(90,158,232,0.6);
+}
+body.g-mini-sudoku .panel .sk-cell.peer {
+  background: rgba(255,255,255,0.04);
+}
+body.g-mini-sudoku .panel .sk-cell.same-num,
+body.g-mini-sudoku .panel .sk-cell.same {
+  background: rgba(90,158,232,0.10);
+}
+body.g-mini-sudoku .panel .sk-cell.error,
+body.g-mini-sudoku .panel .sk-cell.conflict {
+  color: var(--coral);
+}
+body.g-mini-sudoku .panel .sk-note,
+body.g-mini-sudoku .panel .sk-cell .notes { color: var(--muted); }
+body.g-mini-sudoku .panel .sk-cell.box-b { border-right:  2px solid var(--border-hi); }
+body.g-mini-sudoku .panel .sk-cell.box-t { border-bottom: 2px solid var(--border-hi); }
+body.g-mini-sudoku .panel .sk-cell[data-r="1"],
+body.g-mini-sudoku .panel .sk-cell[data-r="3"] { border-bottom: 2px solid var(--border-hi); }
+body.g-mini-sudoku .panel .sk-cell[data-c="2"] { border-right: 2px solid var(--border-hi); }
+body.g-mini-sudoku .panel .pad-btn,
+body.g-mini-sudoku .panel .sk-pad button {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: 10px;
+}
+body.g-mini-sudoku .panel .pad-btn:hover,
+body.g-mini-sudoku .panel .sk-pad button:hover {
+  background: var(--border);
+  border-color: var(--border-hi);
+}
+body.g-mini-sudoku .panel .pad-btn.active,
+body.g-mini-sudoku .panel .sk-pad button.active,
+body.g-mini-sudoku .panel .sk-pad button[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+/* ── Lights Out ─────────────────────────────────────────────── */
+body.g-lights-out .panel .lo-grid {
+  background: var(--bg);
+  border: none;
+  border-radius: 16px;
+  padding: 10px;
+  gap: 8px;
+}
+body.g-lights-out .panel .lo-cell {
+  background: #2a2520;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: background .15s, box-shadow .15s, border-color .15s;
+}
+body.g-lights-out .panel .lo-cell:hover { border-color: var(--border-hi); }
+body.g-lights-out .panel .lo-cell.on {
+  background: #f5b800;
+  border-color: #d4a000;
+  box-shadow:
+    0 0 24px rgba(245,184,0,0.55),
+    0 0 8px rgba(245,184,0,0.3),
+    inset 0 0 12px rgba(255,230,120,0.3);
+}
+
+/* ── Memory ─────────────────────────────────────────────────── */
+body.g-memory .panel .mem { gap: 8px; }
+body.g-memory .panel .mem .card {
+  background: linear-gradient(145deg, #3a4a6a, #4a3a6a);
+  border: none;
+  border-radius: 14px;
+  color: transparent;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+body.g-memory .panel .mem .card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+body.g-memory .panel .mem .card.flip,
+body.g-memory .panel .mem .card.match {
+  background: var(--bg-2);
+  color: var(--fg);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+body.g-memory .panel .mem .card.match {
+  background: rgba(109,213,140,0.12);
+  border: 1px solid rgba(109,213,140,0.3);
+  box-shadow: 0 0 8px rgba(109,213,140,0.15);
+}
+
+/* ── Connect Four ───────────────────────────────────────────── */
+body.g-connect-four .panel .c4-board,
+body.g-connect-four .panel .board {
+  background: #2a4a7a;
+  border: none;
+  border-radius: 18px;
+  padding: 8px;
+  gap: 6px;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.06);
+}
+body.g-connect-four .panel .c4-slot {
+  background: var(--bg);
+  border: 2px solid #2a4a7a;
+  border-radius: 999px;
+}
+body.g-connect-four .panel .c4-slot.p1 {
+  background: var(--coral);
+  border-color: #c04838;
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,0.2),
+    0 0 10px rgba(255,107,107,0.3);
+}
+body.g-connect-four .panel .c4-slot.p2 {
+  background: #f5c800;
+  border-color: #d4aa00;
+  box-shadow:
+    inset 0 3px 0 rgba(255,255,255,0.3),
+    0 0 10px rgba(245,200,0,0.3);
+}
+body.g-connect-four .panel .c4-slot.win {
+  outline: 3px solid #fff;
+  outline-offset: -4px;
+}
+body.g-connect-four .panel .c4-col-btn {
+  background: transparent;
+  border: 1px dashed var(--border);
+  color: var(--muted);
+  border-radius: 10px;
+}
+body.g-connect-four .panel .c4-col-btn:hover:not(:disabled) {
+  background: rgba(245,184,0,0.08);
+  color: var(--accent);
+}
+
+/* ── 2048 ───────────────────────────────────────────────────── */
+body.g-2048 .panel .board2048 {
+  background: var(--bg);
+  border: none;
+  border-radius: 16px;
+  padding: 10px;
+  gap: 10px;
+}
+body.g-2048 .panel .tile {
+  background: #2a2520;
+  border: none;
+  color: var(--muted);
+  border-radius: 12px;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+body.g-2048 .panel .t2    { background: #3a3428; color: #c8c0b0; }
+body.g-2048 .panel .t4    { background: #4a4030; color: #d8d0c0; }
+body.g-2048 .panel .t8    { background: #7a5528; color: #fff; }
+body.g-2048 .panel .t16   { background: #b06830; color: #fff; }
+body.g-2048 .panel .t32   { background: #c05a30; color: #fff; }
+body.g-2048 .panel .t64   { background: var(--coral); color: #fff; }
+body.g-2048 .panel .t128  {
+  background: #a08a20;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(160,138,32,0.4);
+}
+body.g-2048 .panel .t256  {
+  background: #c8a820;
+  color: #fff;
+  box-shadow: 0 0 18px rgba(200,168,32,0.45);
+}
+body.g-2048 .panel .t512  {
+  background: var(--sun);
+  color: #1a1210;
+  box-shadow: 0 0 20px rgba(245,184,0,0.5);
+}
+body.g-2048 .panel .t1024 {
+  background: #e8a000;
+  color: #1a1210;
+  box-shadow: 0 0 24px rgba(232,160,0,0.5);
+  font-size: clamp(0.9rem, 4vw, 1.5rem);
+}
+body.g-2048 .panel .t2048 {
+  background: linear-gradient(145deg, #f5c800, #e8a000);
+  color: #1a1210;
+  box-shadow: 0 0 30px rgba(245,200,0,0.55);
+  font-size: clamp(0.9rem, 4vw, 1.5rem);
+}
+body.g-2048 .panel .t4096,
+body.g-2048 .panel .t8192 {
+  background: var(--grape);
+  color: #fff;
+  box-shadow: 0 0 26px rgba(167,139,250,0.45);
+  font-size: clamp(0.9rem, 4vw, 1.5rem);
+}
+
+/* ── Chess ──────────────────────────────────────────────────── */
+body.g-chess .panel .board {
+  border: none;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+body.g-chess .panel .sq.light { background: #d4b888; }
+body.g-chess .panel .sq.dark  { background: #8a6840; }
+body.g-chess .panel .sq.sel {
+  outline: 3px solid var(--sun);
+  outline-offset: -3px;
+  z-index: 1;
+}
+body.g-chess .panel .sq.last {
+  box-shadow: inset 0 0 0 3px rgba(245,184,0,0.45);
+}
+body.g-chess .panel .sq.hint::after { background: rgba(245,184,0,0.35); }
+body.g-chess .panel .sq.w {
+  color: #f0e8d8;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+body.g-chess .panel .sq.b {
+  color: #1a1210;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ── Minesweeper ────────────────────────────────────────────── */
+body.g-minesweeper .panel .ms {
+  background: var(--bg);
+  border: none;
+  border-radius: 14px;
+  padding: 6px;
+  gap: 3px;
+}
+body.g-minesweeper .panel .c {
+  background: #3a3428;
+  border: none;
+  color: var(--fg);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+body.g-minesweeper .panel .c:hover {
+  background: #4a4038;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+body.g-minesweeper .panel .c.open {
+  background: var(--bg-2);
+  box-shadow: none;
+}
+body.g-minesweeper .panel .c.open:hover {
+  background: var(--bg-2);
+  box-shadow: none;
+}
+body.g-minesweeper .panel .c.flag {
+  background: rgba(245,184,0,0.12);
+  color: var(--sun);
+  box-shadow: none;
+}
+body.g-minesweeper .panel .c.mine {
+  background: rgba(255,107,107,0.15);
+  color: var(--coral);
+  box-shadow: none;
+}
+body.g-minesweeper .panel .n1 { color: #6aa8e8; }
+body.g-minesweeper .panel .n2 { color: var(--forest); }
+body.g-minesweeper .panel .n3 { color: var(--coral); }
+body.g-minesweeper .panel .n4 { color: var(--grape); }
+body.g-minesweeper .panel .n5 { color: #e8885a; }
+body.g-minesweeper .panel .n6 { color: var(--teal); }
+body.g-minesweeper .panel .n7 { color: var(--fg); }
+body.g-minesweeper .panel .n8 { color: #e85a5a; }
+
+/* ================================================================
+   UNIVERSAL POLISH
+   ================================================================ */
+
+/* ── Win / status banners ───────────────────────────────────── */
+body[class*="g-"] .panel .banner {
+  border: 1px solid var(--border-hi);
+  background: var(--bg-2);
+  color: var(--muted);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+body[class*="g-"] .panel .banner.win {
+  border-color: rgba(109,213,140,0.4);
+  background: rgba(109,213,140,0.08);
+  color: var(--forest);
+  box-shadow: 0 0 12px rgba(109,213,140,0.1);
+}
+body[class*="g-"] .panel .banner.bad,
+body[class*="g-"] .panel .banner.err {
+  border-color: rgba(255,107,107,0.35);
+  background: rgba(255,107,107,0.08);
+  color: var(--coral);
+}
+
+/* ── Board elevation ────────────────────────────────────────── */
+body[class*="g-"] .panel .board,
+body[class*="g-"] .panel .tg-grid,
+body[class*="g-"] .panel .qn-grid,
+body[class*="g-"] .panel .zp-grid,
+body[class*="g-"] .panel .pt-grid,
+body[class*="g-"] .panel .sk-grid,
+body[class*="g-"] .panel .lo-grid,
+body[class*="g-"] .panel .c4-board,
+body[class*="g-"] .panel .mem,
+body[class*="g-"] .panel .board2048,
+body[class*="g-"] .panel .ms {
+  box-shadow:
+    0 2px 10px rgba(0,0,0,0.2),
+    0 1px 3px rgba(0,0,0,0.15);
+}
+/* Chess & Connect-Four deeper shadows */
+body.g-chess .panel .board {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+}
+body.g-connect-four .panel .c4-board {
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.06),
+    0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* ── Tactile press feedback ─────────────────────────────────── */
+body[class*="g-"] .panel .cell,
+body[class*="g-"] .panel .tg-cell,
+body[class*="g-"] .panel .qn-cell,
+body[class*="g-"] .panel .zp-cell,
+body[class*="g-"] .panel .pt-cell,
+body[class*="g-"] .panel .sk-cell,
+body[class*="g-"] .panel .lo-cell,
+body[class*="g-"] .panel .c4-slot,
+body[class*="g-"] .panel .mem .card,
+body[class*="g-"] .panel .tile,
+body[class*="g-"] .panel .sq,
+body[class*="g-"] .panel .c {
+  transition: background .12s, transform .08s,
+              box-shadow .15s, color .12s,
+              border-color .12s;
+}
+body[class*="g-"] .panel .cell:active:not(:disabled),
+body[class*="g-"] .panel .tg-cell:active,
+body[class*="g-"] .panel .qn-cell:active,
+body[class*="g-"] .panel .zp-cell:active,
+body[class*="g-"] .panel .pt-cell:active,
+body[class*="g-"] .panel .sk-cell:active,
+body[class*="g-"] .panel .lo-cell:active,
+body[class*="g-"] .panel .c4-slot:active,
+body[class*="g-"] .panel .mem .card:active,
+body[class*="g-"] .panel .c:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[class*="g-"] .panel button,
+  body[class*="g-"] .panel .btn,
+  body[class*="g-"] .panel .chip,
+  body[class*="g-"] .panel .cell,
+  body[class*="g-"] .panel .tg-cell,
+  body[class*="g-"] .panel .qn-cell,
+  body[class*="g-"] .panel .zp-cell,
+  body[class*="g-"] .panel .pt-cell,
+  body[class*="g-"] .panel .sk-cell,
+  body[class*="g-"] .panel .lo-cell,
+  body[class*="g-"] .panel .c4-slot,
+  body[class*="g-"] .panel .mem .card,
+  body[class*="g-"] .panel .tile,
+  body[class*="g-"] .panel .c { transition: none !important; }
+  body[class*="g-"] .panel *:active { transform: none !important; }
+}
+
+/* iOS: prevent double-tap zoom on interactive elements */
+body[class*="g-"] .panel button,
+body[class*="g-"] .panel .chip,
+body[class*="g-"] .panel .cell,
+body[class*="g-"] .panel .tg-cell,
+body[class*="g-"] .panel .qn-cell,
+body[class*="g-"] .panel .zp-cell,
+body[class*="g-"] .panel .pt-cell,
+body[class*="g-"] .panel .sk-cell,
+body[class*="g-"] .panel .lo-cell,
+body[class*="g-"] .panel .c4-slot,
+body[class*="g-"] .panel .mem .card,
+body[class*="g-"] .panel .c {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Mobile polish ──────────────────────────────────────────── */
+@media (max-width: 560px) {
+  body[class*="g-"] .wrap { padding: 16px 12px 28px; }
+  body[class*="g-"] .topbar { margin-bottom: 14px; padding-bottom: 10px; }
+  body[class*="g-"] .topbar h1 { font-size: 15px; }
+  body[class*="g-"] .panel {
+    padding: 16px 14px 18px;
+    border-radius: 16px;
+  }
+  body[class*="g-"] .panel .row { flex-wrap: wrap; gap: 8px; }
+  body[class*="g-"] .panel .toolbar { gap: 8px; flex-wrap: wrap; }
+  body[class*="g-"] .panel .toolbar .tool-btn { flex: 1 1 auto; min-width: 0; }
+  body[class*="g-"] .panel .chips { gap: 6px; }
+  body[class*="g-"] .panel .chip { padding: 8px 12px; }
+}
+
+/* ── Manpage overlay ────────────────────────────────────────── */
+body[class*="g-"] .man-backdrop {
+  background: rgba(0,0,0,0.55);
+}
+body[class*="g-"] .man-window {
+  background: #2a2724;
+  border: 1px solid var(--border-hi);
+  color: var(--fg);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+body[class*="g-"] .man-window h2,
+body[class*="g-"] .man-window h3 { color: var(--fg); }
+body[class*="g-"] .man-window code,
+body[class*="g-"] .man-window .kbd {
+  background: var(--bg-2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+body[class*="g-"] .man-window .muted { color: var(--muted); }
+body[class*="g-"] .man-window .man-close { color: var(--muted); }
+body[class*="g-"] .man-window .man-close:hover {
+  color: var(--fg);
+  background: rgba(255,255,255,0.06);
+}

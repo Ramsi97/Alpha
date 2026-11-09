@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>memory</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Memory Match — flip pairs of cards, remember positions, clear the board.">
+<link rel="stylesheet" href="../_shared/theme.css">
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="manpage.css">
+<link rel="stylesheet" href="soft.css">
+<style>
+  .mem {
+    display: grid;
+    gap: 6px;
+    width: min(460px, 92vw);
+    margin: 0 auto;
+  }
+  /* Note: game.js uses `.card` for memory tiles; hub also uses `.card`.
+     Scoping to `.mem .card` avoids any cross-bleed. */
+  .mem .card {
+    aspect-ratio: 1;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.4rem, 6vw, 2rem);
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    min-height: 0;
+    padding: 0;
+  }
+  .mem .card:hover { background: var(--panel); }
+  .mem .card.flip { background: var(--panel); border-color: var(--border-hi); }
+  .mem .card.match { border-color: var(--accent-2); }
+  .mem .card .face { opacity: 0; transition: opacity 0.15s; }
+  .mem .card.flip .face, .mem .card.match .face { opacity: 1; }
+
+  select {
+    background: var(--panel-2);
+    color: var(--fg);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r-md);
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    min-height: var(--tap);
+  }
+  .alphago-waiting {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    background: var(--ag-bg);
+    color: var(--ag-text);
+    font-size: 16px;
+  }
+  .alphago-waiting.hidden { display: none; }
+  .wrap { position: relative; }
+</style>
+</head>
+<body class="g-memory">
+<main class="wrap">
+  <div class="alphago-waiting">Waiting for the game to start…</div>
+  <div class="topbar">
+    <h1>memory</h1>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <p class="status" id="status">Flip two. Match all pairs.</p>
+      <p class="status">Moves: <span id="moves">0</span> · Time: <span id="time">0</span>s · Best: <span id="best">—</span></p>
+      <button class="btn ghost tool-btn man-trigger" data-man="memory" data-man-title="MEMORY(1)" type="button">
+        <span class="q">?</span> man
+      </button>
+    </div>
+    <div class="mem" id="board"></div>
+    <div class="controls" style="justify-content:center">
+      <button class="primary" id="reset">New game</button>
+      <select id="size" aria-label="Board size">
+        <option value="4">4×4</option>
+        <option value="6" selected>6×6</option>
+        <option value="8">8×8</option>
+      </select>
+    </div>
+  </div>
+</main>
+
+<template id="man-memory">
+  <h2>Name</h2>
+  <p>memory — flip pairs, clear the board, beat your best time.</p>
+
+  <h2>Rules</h2>
+  <ul>
+    <li>All cards start face-down. Each symbol appears exactly twice.</li>
+    <li>Flip two cards per turn. If they match, they stay up; otherwise they flip back.</li>
+    <li>Clear every pair to win.</li>
+  </ul>
+
+  <h2>Controls</h2>
+  <ul>
+    <li><strong>Tap / click</strong> a card to flip it.</li>
+    <li><code>New game</code> shuffles a fresh board. Size dropdown switches between 4×4, 6×6, 8×8.</li>
+  </ul>
+
+  <h2>Notes</h2>
+  <p class="muted">Best time shown is for this run's session only (plan section 6.3 — no real persistence).</p>
+</template>
+
+<script src="../_shared/alphago-bridge.js"></script>
+<script defer src="manpage.js"></script>
+<script defer src="gamekit.js"></script>
+<script defer src="game.js"></script>
+</body>
+</html>

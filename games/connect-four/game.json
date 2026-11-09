@@ -1,0 +1,27 @@
+{
+  "slug": "connect-four",
+  "version": "1.0.0",
+  "title": { "en": "Connect Four" },
+  "description": { "en": "Drop checkers, get four in a row. Play against the AI." },
+  "category": "strategy",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": ["easy", "medium", "hard"],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 1200,
+    "min_play_seconds": 15,
+    "max_score_per_second": 80
+  },
+  "xp": { "rate": 0.08, "max_per_run": 100 },
+  "license": {
+    "code": "MIT",
+    "assets": "none (no external assets)",
+    "author": "Tejas Wavde",
+    "source_url": "https://github.com/wavde/games"
+  },
+  "size_kb": 75,
+  "status": "pending"
+}

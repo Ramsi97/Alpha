@@ -1,0 +1,27 @@
+{
+  "slug": "0hh1",
+  "version": "1.0.0",
+  "title": { "en": "0h h1" },
+  "description": { "en": "A binary logic puzzle: fill the grid with balanced, non-repeating rows and columns." },
+  "category": "binary-logic",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": ["4x4", "6x6", "8x8", "10x10"],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 1300,
+    "min_play_seconds": 10,
+    "max_score_per_second": 120
+  },
+  "xp": { "rate": 0.1, "max_per_run": 130 },
+  "license": {
+    "code": "MIT",
+    "assets": "MIT (bundled fonts JosefinSans/Molle — original attribution not separately verified, see CREDITS.md)",
+    "author": "Martin Kool / Q42",
+    "source_url": "https://github.com/florisluiten/0hh1"
+  },
+  "size_kb": 310,
+  "status": "pending"
+}

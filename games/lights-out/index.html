@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>lights-out</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Lights Out — turn every light off. Toggle cells and their neighbors.">
+<link rel="stylesheet" href="../_shared/theme.css">
+<link rel="stylesheet" href="shared.css">
+<link rel="stylesheet" href="manpage.css">
+<link rel="stylesheet" href="soft.css">
+<style>
+  .lo-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 6px;
+    width: min(380px, 88vw);
+    aspect-ratio: 1;
+    margin: 8px auto;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    padding: 8px;
+  }
+  .lo-cell {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--panel-2);
+    cursor: pointer;
+    user-select: none;
+    padding: 0;
+    transition: background 0.12s, box-shadow 0.12s, border-color 0.12s;
+  }
+  .lo-cell:hover { border-color: var(--border-hi); }
+  .lo-cell:active { transform: scale(0.93); }
+  .lo-cell.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 16px rgba(245, 197, 66, 0.45), inset 0 0 12px rgba(255, 240, 180, 0.35);
+  }
+  .game-controls { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin: 8px 0 4px; }
+  .alphago-waiting {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    background: var(--ag-bg);
+    color: var(--ag-text);
+    font-size: 16px;
+  }
+  .alphago-waiting.hidden { display: none; }
+  .wrap { position: relative; }
+</style>
+</head>
+<body class="g-lights-out">
+<main class="wrap">
+  <div class="alphago-waiting">Waiting for the game to start…</div>
+  <div class="topbar">
+    <h1>lights-out</h1>
+  </div>
+  <div class="panel">
+    <div class="row">
+      <p class="status" id="status">Turn every light off.</p>
+      <p class="status">Moves: <span id="moves">0</span> · Best: <span id="best">—</span></p>
+      <button class="btn ghost tool-btn man-trigger" data-man="lights-out" data-man-title="LIGHTS-OUT(1)" type="button">
+        <span class="q">?</span> man
+      </button>
+    </div>
+    <div class="game-controls">
+      <div class="chips" id="chips" role="tablist" aria-label="Difficulty">
+        <button class="chip" data-diff="easy" role="tab" type="button">Easy</button>
+        <button class="chip" data-diff="medium" role="tab" type="button">Medium</button>
+        <button class="chip" data-diff="hard" role="tab" type="button">Hard</button>
+      </div>
+      <button id="new-btn" class="btn ghost tool-btn" type="button"><span class="glyph">↻</span> new</button>
+    </div>
+    <div class="lo-grid" id="board"></div>
+    <div class="toolbar">
+      <button class="btn ghost tool-btn" id="undo-btn" type="button"><span class="glyph">↶</span> undo</button>
+      <button class="btn ghost tool-btn" id="reset-btn" type="button"><span class="glyph">↻</span> reset</button>
+    </div>
+  </div>
+</main>
+
+<template id="man-lights-out">
+  <h2>Name</h2>
+  <p>lights-out — turn every light off.</p>
+
+  <h2>Rules</h2>
+  <ul>
+    <li>The grid is 5×5. Each cell is a light — <strong>on</strong> (amber) or <strong>off</strong>.</li>
+    <li>Tapping a cell toggles <strong>that cell and its four orthogonal neighbors</strong> (not diagonals).</li>
+    <li>Win when every light is off.</li>
+  </ul>
+
+  <h2>Controls</h2>
+  <ul>
+    <li><strong>Tap / click</strong> any cell.</li>
+    <li><code>↶ undo</code> takes back your last move. <code>↻ reset</code> restores the puzzle's starting state (same run).</li>
+    <li><code>↻ new</code> ends this run and waits for the host to start a fresh one.</li>
+  </ul>
+
+  <h2>Difficulty</h2>
+  <ul>
+    <li><strong>Easy</strong> — 3 scrambles. <strong>Medium</strong> — 6 scrambles. <strong>Hard</strong> — 10 scrambles.</li>
+    <li>Every puzzle is solvable by construction.</li>
+  </ul>
+
+  <h2>Strategy</h2>
+  <p class="muted">"Chase the lights" top to bottom: to clear a row's lit cells, press the cells directly below them. When you reach the bottom row, its pattern tells you which top-row cells to press to finish.</p>
+</template>
+
+<script src="../_shared/alphago-bridge.js"></script>
+<script defer src="manpage.js"></script>
+<script defer src="gamekit.js"></script>
+<script defer src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "slug": "mini-sudoku",
+  "version": "1.0.0",
+  "title": { "en": "Mini Sudoku" },
+  "description": { "en": "6×6 sudoku with 2×3 boxes. Pencil marks, keyboard support." },
+  "category": "logic",
+  "thumbnail": "thumb.svg",
+  "entry": "index.html",
+  "orientation": "portrait",
+  "variants": ["easy", "medium", "hard"],
+  "score": {
+    "mode": "bridge",
+    "higher_is_better": true,
+    "max_score": 2000,
+    "min_play_seconds": 20,
+    "max_score_per_second": 50
+  },
+  "xp": { "rate": 0.04, "max_per_run": 80 },
+  "license": {
+    "code": "MIT",
+    "assets": "none (no external assets)",
+    "author": "Tejas Wavde",
+    "source_url": "https://github.com/wavde/games"
+  },
+  "size_kb": 77,
+  "status": "pending"
+}

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>AlphaGo dummy game</title>
+  <link rel="stylesheet" href="../_shared/theme.css" />
+</head>
+<body>
+  <main style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:12px;">
+    <p id="status">loading...</p>
+    <button id="win" disabled>Win run (score 100)</button>
+    <button id="lose" disabled>Lose run (score 0)</button>
+  </main>
+
+  <script src="../_shared/alphago-bridge.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
